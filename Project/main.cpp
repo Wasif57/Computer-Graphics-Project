@@ -1,11 +1,9 @@
-#include<GL/glut.h>
+
+#include<cstdio>
+#include <GL/gl.h>
+#include <GL/glut.h>
 #include<math.h>
-#include<iostream>
-#include<stdlib.h>
-#include<GL/gl.h>
-#include<cstring>
-#include<windows.h>
-#include<mmsystem.h>
+
 
 float angle1=30.0f;
 float angle2=0.2f;
@@ -157,17 +155,129 @@ void House()
     glVertex2f(70,40);
     glVertex2f(115,90);
     glVertex2f(160,40);
+}
+
+void drawCloud()
+{
+    glPushMatrix();
+
+    glColor3f(0.8,0.8,0.8);
+    DrawCircle(-130,170,25,100);
+    DrawCircle(-160,175,25,100);
+    DrawCircle(-100,165,25,100);
+    DrawCircle(-140,155,25,100);
+
+    DrawCircle(130,170,25,100);
+    DrawCircle(160,175,25,100);
+    DrawCircle(100,165,25,100);
+    DrawCircle(140,155,25,100);
+
+
+    glPopMatrix();
+}
+
+void drawClock()
+{
+    glPushMatrix();
+
+    glColor3f(0.827,0.827,0.827);
+    DrawCircle(-140,75,25,100);
+
+    glPopMatrix();
+}
+
+void cloud()
+{
+    if (cloudStatus == 1)
+    {
+        cloudX += 0.2;
+    }
+
+    if(cloudX > 1100)
+    {
+        cloudX = -650;
+    }
+
+    glPushMatrix();
+    glTranslatef(cloudX, cloudY,0.0);
+    drawCloud();
+
+    glPopMatrix();
+}
+
+void drawScene()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glutSwapBuffers();
+}
+
+void drawSceneDay()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    //drawClock();
+    //boat();
+    //carD();
+    Sun();
+    House();
+    //tree();
+    //divider();
+    //road();
+    cloud();
+    //cloud2();
+    //backgroundDay();
+
+
+    glutSwapBuffers();
+}
+
+void menu(int id)
+{
+    switch (id)
+    {
+    case 1:
+        glutIdleFunc(drawSceneDay);
+        break;
+    case 2:
+        glutIdleFunc(drawScene);
+        break;
+    case 3:
+        exit(0);
+    }
+
+}
+
+void specialKeys(int key, int x, int y)
+{
 
 }
 
 int main(int argc, char** argv)
  {
-	glutInit(&argc, argv);                 // Initialize GLUT
-	glutCreateWindow("OpenGL Setup Test"); // Create a window with the given title
-	glutInitWindowSize(1280, 720);   // Set the window's initial width & height
-	glutDisplayFunc(Sun); // Register display callback handler for window re-paint
-	glutMainLoop();           // Enter the event-processing loop
-	return 0;
+	glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowPosition(0,0);
+    glutInitWindowSize(1920,1080);
+    glutCreateWindow("Platform");
+    glutDisplayFunc(drawSceneDay);
+
+    //glutSpecialFunc(specialKeys);
+    initRendering();
+    glutIdleFunc(idle);
+    //init();
+
+    glutKeyboardFunc(handleKeyPress);
+    //glutTimerFunc(20, update,0);
+
+    glutCreateMenu(menu);
+    glutAddMenuEntry("Day",1);
+    glutAddMenuEntry("Night",2);
+    glutAddMenuEntry("Quit",3);
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
+
+    glutMainLoop();
+    return 0;
  }
 
 
