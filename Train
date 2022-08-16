@@ -1,0 +1,133 @@
+#include<windows.h>
+#include <GL/glut.h>
+#include<math.h>
+float angle = 0.0, x=-4;
+double  r=.2,s=.3;
+int i;
+float  tx=10,bx=10;
+
+void init()
+{
+    glClearColor(1.0f,1.0f,1.0f,1.0f);
+    glOrtho(-210,210,-220,310,-210,310);
+
+}
+
+
+void trainBoggie()
+{
+   glPushMatrix(); //Right Wheel Far
+   glColor3f(0,0,0);
+   glTranslated(0.75,-0.5, -0.5);
+   glRotated(angle,0,0,1);
+   glutWireTorus (0,0,0,0);
+   glPopMatrix();
+
+   glPushMatrix(); //Left Wheel Far
+   glColor3f(0,0,0);
+   glTranslated(-0.75,-0.5, -0.5);
+   glRotated(angle,0,0,1);
+   glutWireTorus (0.1,0.2,10,10);
+   glPopMatrix();
+
+   glPushMatrix(); //Train BOX
+   glColor3f(0,0.75,0.11);
+   glScaled(2,1,1);
+   glutSolidCube(1);
+   glColor3f(0,0,0);
+   glutWireCube(1);
+   glPopMatrix();
+
+   glPushMatrix(); //Train Connection Boxes
+   glColor3f(0,0,0);
+   glTranslated(1,-0.35,0);
+   glScaled(1,0.09,0.09);
+   glutSolidCube(1);
+   glPopMatrix();
+
+   glPushMatrix(); //Right Wheel Far
+   glColor3f(0,0,0);
+   glTranslated(0.75,-0.5, 0.5);
+   glRotated(angle,0,0,1);
+   glutWireTorus (0.1,0.2,10,10);
+   glPopMatrix();
+
+   glPushMatrix(); //Left Wheel Far
+   glColor3f(0,0,0);
+   glTranslated(-0.75,-0.5, 0.5);
+   glRotated(angle,0,0,1);
+   glutWireTorus (0.1,0.2,10,10);
+   glPopMatrix();
+
+   angle-=0.2;
+}
+
+
+
+
+void renderScene (void)
+{
+
+   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glMatrixMode (GL_PROJECTION);
+   glLoadIdentity();
+   glOrtho (-3,3,-2,2,-4,4);
+
+   glRotatef(10,1.0,1.0,0.0); //
+   glPushMatrix ();
+
+
+   glColor3f(0,0,0); //Rail
+   glTranslated (0,-0.4,0);
+   glScaled (9,0.1,0.1);
+   glutWireCube(1);
+   glPopMatrix();
+
+   glTranslatef(x,0,0); // to move train
+   glScaled(0.5,0.5,0.5);
+
+   glPushMatrix();
+   glTranslated (-2.4,0,0);
+   trainBoggie();
+   glPopMatrix();
+   glPushMatrix();
+   glTranslated (0,0,0);
+   trainBoggie();
+   glPopMatrix();
+   glPushMatrix();
+   glTranslated (2.4,0,0);
+   trainBoggie();
+   glPopMatrix();
+
+   if (x<6)
+  	x+=0.002; //control train speed from here
+   else
+  	x=-6;
+
+
+   glutSwapBuffers();
+
+   }
+
+
+
+
+
+
+
+
+
+int main(int argc,char** argv) {
+    glutInit(&argc,argv);
+glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
+glutInitWindowPosition (10,10);
+glutInitWindowSize (1366,768);
+glutCreateWindow("Home");
+glutDisplayFunc(renderScene);
+glutIdleFunc (renderScene);
+glClearColor(1,1,1,1);
+glutMainLoop();
+return 0;
+}
+
+
